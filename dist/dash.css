@@ -1,0 +1,47 @@
+/*
+  Dash Core Styles
+  ----------------------
+  Assumes you are using a ul/ol for your slider
+  <div class="slider-wrap">
+    <ul class="slider">
+      <li>Slide 1</li>
+      <li>Slide 2</li>
+      <li>Slide 3</li>
+    </ul>
+  </div>
+*/
+.slider-wrap {
+  overflow: hidden;
+  position: relative;
+  width: 920px; }
+  .slider-wrap .slider {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    zoom: 1; }
+    .slider-wrap .slider:before, .slider-wrap .slider:after {
+      content: "";
+      display: block;
+      overflow: hidden; }
+    .slider-wrap .slider:after {
+      clear: both; }
+    .slider-wrap .slider li {
+      float: left;
+      height: 260px;
+      width: 920px; }
+
+/*
+  Dash Theme Styles
+  ----------------------
+  Below uses the default classes set for styling
+  as an example
+
+  .dash-nav {}
+  .dash-nav-item {}
+  .dash-nav-item:hover {}
+  .dash-nav-item.dash-nav-item-active {}
+  
+  .dash-controls {}
+  .dash-controls-left {}
+  .dash-controls-right {}
+*/
