@@ -61,4 +61,11 @@
     strictEqual(this.elems.find('li').length, this.elems.find('.dash-nav span').length, 'should equal the same');
   });
 
+  test('should support deep linking to slides', function () {
+    expect(1);
+    document.location.hash = 3;
+    var dash = this.elems.dash().data('api_dash');
+    strictEqual(dash.currentSlide(), 3, 'slide 3 should be active');
+  });
+
 }(jQuery));

@@ -56,6 +56,9 @@ $('.slider-wrap').dash({
   controlsLeftClass: 'dash-controls-left',
   controlsRightClass: 'dash-controls-right',
 
+  // Deep Linking
+  deepLinking: true,
+
   // Key Controls
   // Defaults to arrow keys
   keyControls: true,
@@ -99,10 +102,12 @@ $('button.next').on('click', dashSlider.next ); // Triggers next slide on any bu
 
 The following Dash API is available:
 
+- `currentSlide`: Returns a number value of the active slide
 - `next`: Triggers Dash to move forward one
 - `prev`: Triggers Dash to move back one
 - `goTo`: Triggers Dash to jump to a specific slide provided as a param
 
 ## Release History
 
+* 2013-12-13   v0.1.1   Add deep linking support
 * 2013-12-02   v0.1.0   Initial Dash jQuery Slider Plugin release 

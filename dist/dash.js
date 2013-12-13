@@ -1,4 +1,4 @@
-/*! dash - v0.1.0 - 2013-12-02
+/*! dash - v0.1.0 - 2013-12-13
 * https://github.com/joshuajones/dash
 * Copyright (c) 2013 Joshua Jones; Licensed MIT */
 ;(function($) {
@@ -46,6 +46,9 @@
         controlsLeftClass: 'dash-controls-left',
         controlsRightClass: 'dash-controls-right',
 
+        // Deep Linking
+        deepLinking: true,
+
         // Key Controls
         keyControls: true,
         keymap: {
@@ -80,6 +83,9 @@
     this.build();
     this.autoPlay();
 
+    // deepLinking
+    if (this.settings.deepLinking) { this.pageLoadSlide(); }
+
     // Plugin Hooks
     $.each(this.settings, function (key, val) {
       if (typeof val === 'function') {
@@ -89,6 +95,9 @@
 
     // API
     return {
+      currentSlide: function() {
+        return -(self.currentSlide-1);
+      },
       next: function (callback) {
         self.slide(1, false, callback);
       },
@@ -131,6 +140,7 @@
           if (e.type === 'mouseout') { this.autoPlay(); }
         }.bind(this));
       }
+
     },
     build: function () {
       if (this.settings.nav) { this.nav(); }
@@ -204,6 +214,7 @@
       var goToVal = goTo || false,
           current = (goToVal) ? 0 : this.currentSlide,
           slidesLen = -(this.slides.length-1),
+          hash,
           move;
 
       // Trigger Before Hook
@@ -243,6 +254,12 @@
         callback();
       }
 
+      // deepLinking url update without history addition
+      if ( this.settings.deepLinking ) {
+        hash = -(current-1);
+        window.history.replaceState('', '', '#'+hash);
+      }
+
       // Start auto
       this.autoPlay();
     },
@@ -256,6 +273,13 @@
     autoPause: function () {
       if (this.settings.autoplay) {
         this.auto = clearInterval(this.auto);
+      }
+    },
+    pageLoadSlide: function () {
+      var num = document.location.hash.replace('#', '');
+
+      if ( num !== '' && num <= this.slides.length && num > 0 ) {
+        this.slide(num-1, true);
       }
     }
   };
