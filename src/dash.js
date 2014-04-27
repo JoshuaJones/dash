@@ -8,28 +8,6 @@
 
 ;(function($) {
 
-  // Polyfill for .bind()
-  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
-  if (!Function.prototype.bind) {
-    Function.prototype.bind = function (oThis) {
-      if (typeof this !== "function") {
-        throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-      }
-
-      var aArgs = Array.prototype.slice.call(arguments, 1),
-          fToBind = this,
-          Fnop = function () {},
-          fBound = function () {
-            return fToBind.apply(this instanceof Fnop && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
-          };
-
-      Fnop.prototype = this.prototype;
-      fBound.prototype = new Fnop();
-
-      return fBound;
-    };
-  }
-
   var name = "dash",
       defaults = {
 
@@ -92,11 +70,11 @@
     if (this.settings.deepLinking) { this.pageLoadSlide(); }
 
     // Plugin Hooks
-    $.each(this.settings, function (key, val) {
+    $.each(this.settings, $.proxy(function (key, val) {
       if (typeof val === 'function') {
         this.$el.on(key + '.dash', val);
       }
-    }.bind(this));
+    }, this) );
 
     // API
     return {
@@ -130,20 +108,20 @@
 
       // Keyboard Controls
       if(this.settings.keyControls) {
-        $(document).on('keyup', function (e) {
+        $(document).on('keyup', $.proxy(function (e) {
           if(e.keyCode === keymap.prev) { this.slide(-1, false); }
           if(e.keyCode === keymap.next) { this.slide(1, false); }
           if(e.keyCode === keymap.first) { this.slide(0, true); }
           if(e.keyCode === keymap.last) { this.slide(this.slides.length-1, true); }
-        }.bind(this));
+        }, this) );
       }
 
       // pauseOnHover
       if(this.settings.pauseOnHover) {
-        this.$el.add(this.nav).add(this.controls).on('mouseover mouseout', function (e) {
+        this.$el.add(this.nav).add(this.controls).on('mouseover mouseout', $.proxy(function (e) {
           this.autoPause();
           if (e.type === 'mouseout') { this.autoPlay(); }
-        }.bind(this));
+        }, this) );
       }
 
     },
@@ -176,10 +154,10 @@
         navItems.eq(0).addClass(this.settings.navItemActiveClass);
 
         // Add events
-        navItems.on('click', function (e) {
+        navItems.on('click', $.proxy(function (e) {
           this.slide( $(e.target).data('distance'), true );
           e.preventDefault();
-        }.bind(this) );
+        }, this) );
 
       }
     },
@@ -208,10 +186,10 @@
 
         // Add events
         controls = controlsWrap.children();
-        controls.on('click', function (e) {
+        controls.on('click', $.proxy(function (e) {
           this.slide( $(e.target).data('distance') );
           e.preventDefault();
-        }.bind(this) );
+        }, this) );
 
       }
     },
@@ -241,10 +219,10 @@
       // Animate Slide
       this.wrapper.stop().animate({
         'margin-left': move
-      }, this.animationTime, function () {
+      }, this.animationTime, $.proxy(function () {
         // Trigger After Hook
         this.$el.trigger('after.dash');
-      }.bind(this));
+      }, this) );
 
       // Update nav
       if (this.nav) {
@@ -270,9 +248,9 @@
     },
     autoPlay: function () {
       if (this.settings.autoplay) {
-        this.auto = setInterval(function () {
+        this.auto = setInterval( $.proxy(function () {
           this.slide(1);
-        }.bind(this), this.settings.autoplay);
+        }, this), this.settings.autoplay);
       }
     },
     autoPause: function () {
